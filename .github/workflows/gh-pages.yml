@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
         BUILD_BRANCH: gh-pages
+        BUILD_DIR: ${HOME}/build
     steps:
       - name: Checkout current branch
         uses: actions/checkout@master
