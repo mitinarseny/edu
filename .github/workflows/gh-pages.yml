@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
         BUILD_BRANCH: gh-pages
-        BUILD_PATH: ${HOME}/build
+        BUILD_PATH: build
     steps:
       - name: Checkout current branch
         uses: actions/checkout@master
@@ -19,12 +19,9 @@ jobs:
         uses: docker://mitinarseny/panmake:2.7.3
         with:
           entrypoint: make
-      - name: Deploy to GitHub Pages
-        run: |
-          git config --global user.name "GitHub Pages Deploy Action"
-          git checkout ${BUILD_BRANCH} || (git checkout --orphan ${BUILD_BRANCH} && git rm -rf .)
-          mv ${BUILD_PATH}/{.,}* ./
-          [ -z "$(git status --porcelain)" ] && echo "Pages haven't changed' && "exit 0
-          git add .
-          git commit -m "Deploying GitHub Pages from ${GITHUB_REF}:${GITHUB_SHA}" --quiet
-          git push "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" ${BUILD_BRANCH}
+      - name: GitHub Pages Deploy
+        uses: JamesIves/github-pages-deploy-action@master
+        env:
+          GITHUB_TOKEN: {{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: ${BUILD_PATH}
