@@ -1,7 +1,7 @@
 .SECONDEXPANSION:
 
 SOURCE_DIR ?= src
-BUILD_DIR ?= build
+BUILD_PATH ?= build
 FILTERS_DIR ?= filters
 
 DIRS := $(shell find $(SOURCE_DIR) -type d \( ! -regex '.*/\..*' \))

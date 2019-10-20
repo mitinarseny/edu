@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
         BUILD_BRANCH: gh-pages
-        BUILD_DIR: ${HOME}/build
+        BUILD_PATH: ${HOME}/build
     steps:
       - name: Checkout current branch
         uses: actions/checkout@master
@@ -22,8 +22,8 @@ jobs:
       - name: Deploy to GitHub Pages
         run: |
           git config --global user.name "GitHub Pages Deploy Action"
-          git checkout gh-pages || (git checkout --orphan gh-pages && git rm -rf .)
-          mv ${BUILD_DIR}/{.,}* ./
+          git checkout ${BUILD_BRANCH} || (git checkout --orphan ${BUILD_BRANCH} && git rm -rf .)
+          mv ${BUILD_PATH}/{.,}* ./
           [ -z "$(git status --porcelain)" ] && echo "Pages haven't changed' && "exit 0
           git add .
           git commit -m "Deploying GitHub Pages from ${GITHUB_REF}:${GITHUB_SHA}" --quiet
