@@ -21,7 +21,9 @@ jobs:
       - name: Deploy to GitHub Pages
         run: |
           git config --global user.name "GitHub Pages Deploy Action"
-          git checkout master
-          git add -f build/
-          git commit -m "Deploying GitHub Pages" --quiet
-          git push "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" $(git subtree split --prefix build ${GITHUB_REF}):${BUILD_BRANCH} --force
+          git checkout gh-pages || (git checkout --orphan gh-pages && git rm -rf .)
+          mv ${BUILD_DIR}/{.,}* ./
+          [ -z "$(git status --porcelain)" ] && echo "Pages haven't changed' && "exit 0
+          git add .
+          git commit -m "Deploying GitHub Pages from ${GITHUB_REF}:${GITHUB_SHA}" --quiet
+          git push "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git" ${BUILD_BRANCH}
