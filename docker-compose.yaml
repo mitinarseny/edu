@@ -1,0 +1,9 @@
+version: '3.7'
+
+services:
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./${BUILD_DIR}:/usr/share/nginx/html:ro
+    ports:
+      - 8080:80
